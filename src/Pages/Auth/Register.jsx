@@ -1,8 +1,11 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import ax from '../../ax'
 import AuthContext from '../../Context/AuthContext'
+import MessageContext from '../../Context/MessageContext'
 import Master from '../Layout/Master'
+
+
 
 export default function Register() {
 
@@ -12,7 +15,15 @@ export default function Register() {
   const [error,setError] = useState({})
   const [loader,setLoader] = useState(false)
   const authUserContext = useContext(AuthContext)
+  const msgContext = useContext(MessageContext)
   const history = useHistory()
+
+  useEffect(()=>{
+    if(localStorage.getItem('token')){
+      msgContext.setMessage({type:'fail' , message:'Already Login!'})
+      history.push('/')
+    }
+  },[])
 
   const Register = () => {
     setLoader(true)
@@ -31,7 +42,8 @@ export default function Register() {
           localStorage.setItem('token',data.token)
           // auth user data
           authUserContext.setAuthUser(data.user)
-
+          // toast message
+          msgContext.setMessage({type:'success', message:`Welcome ${data.user.name}`})
           // redirect
           history.push('/')
         }
@@ -66,7 +78,6 @@ export default function Register() {
                       <small key={err} className='text-danger'>{err}</small>
                     )
                   }
-
                 </div>
                 
                 <div className="form-group">

@@ -1,48 +1,30 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
+import Label from '../Components/Label'
+import Spinner from '../Components/Spinner'
+import MessageContext from '../Context/MessageContext'
 import Master from './Layout/Master'
-
+ 
 export default function Home() {
+  const history = useHistory()
+  const msgContext = useContext(MessageContext)
+
+  useEffect(()=>{
+    if(!localStorage.getItem('token')){
+      msgContext.setMessage({type:'fail' , message:'Login first!'})
+      history.push('/login')
+    }
+  },[])
+
   return (
     <Master>
        <div className="container mt-3">
     <div className="row">
       {/* For Category and Information */}
       <div className="col-md-4">
+
         <div className="card bg-gray-100">
-          <div className="card-body">
-            <li className="list-group-item bg-bg text-white">
-              Label
-            </li>
-            <ul className="list-group label">
-              <li className="list-group-item bg-dark text-white">
-                <span className="fas fa-tags text-white text-small" />
-                &nbsp; &nbsp;
-                Laravel Note
-                <span className="badge badge-primary float-right">3</span>
-              </li>
-              <li className="list-group-item bg-dark text-white">
-                <span className="fas fa-tags text-white text-small" />
-                &nbsp; &nbsp;
-                Vue JS Note
-                <span className="badge badge-primary float-right">3</span>
-              </li>
-              <li className="list-group-item bg-dark text-white">
-                <span className="fas fa-tags text-white text-small" />
-                &nbsp; &nbsp;
-                Vue JS Note
-                <span className="badge badge-primary float-right">3</span>
-              </li>
-              <li className="list-group-item bg-dark text-white">
-                <span className="fas fa-tags text-white text-small" />
-                &nbsp; &nbsp;
-                Vue JS Note
-                <span className="badge badge-primary float-right">3</span>
-              </li>
-              <li className="list-group-item bg-dark text-white">
-                <a href className="float-right">View All</a>
-              </li>
-            </ul>
-          </div>
+          <Label />
         </div>
         <div className="card bg-gray-100">
           <div className="card-body">
@@ -76,6 +58,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      
       <div className="col-md-8">
         <div className="card">
           <div className="card-body">

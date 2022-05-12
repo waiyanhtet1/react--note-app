@@ -1,6 +1,17 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
+import AuthContext from '../../Context/AuthContext'
+
+
 export default function Master(props) {
+  const authUserContext = useContext(AuthContext)
+  const history = useHistory()
+  const Logout = () =>{
+    localStorage.removeItem('token')
+    authUserContext.setAuthUser({})
+    history.push('/login')
+  }
   return (
     <>
     <div>
@@ -52,8 +63,15 @@ export default function Master(props) {
             recusandae quasi tempore placeat aliquam autem, a soluta nisi totam
             temporibus dolorem!
           </p>
-          <Link to='/register' className="btn btn-outline-primary">SignUp</Link>
-          <Link to='/login' className="btn btn-primary">Login</Link>
+          {
+            localStorage.getItem('token') ? <button onClick={()=>Logout()} className='btn btn-danger'>Logout</button>
+            :
+            <>
+              <Link to='/register' className="btn btn-outline-primary">SignUp</Link>
+              <Link to='/login' className="btn btn-primary">Login</Link>
+            </>
+          }
+          
         </div>
         <div className="col-md-6 text-center">
           <img className src="https://wp.xpeedstudio.com/seocify/home-fifteen/wp-content/uploads/sites/27/2020/03/home17-banner-image-min.png" alt="" />
