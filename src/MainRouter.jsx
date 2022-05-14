@@ -10,6 +10,9 @@ export default function MainRouter() {
         <Route path='/' exact>
             <Home />
         </Route>
+        <Route path='/:category_slug/note' exact>
+            <Home />
+        </Route>
         <Route path='/login'>
             <Login />
         </Route>

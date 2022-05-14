@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
+import { useHistory } from 'react-router-dom'
 import ax from '../../ax'
 import AuthContext from '../../Context/AuthContext'
+import LabelContext from '../../Context/LabelContext'
 import MessageContext from '../../Context/MessageContext'
 import Master from '../Layout/Master'
 
@@ -13,6 +14,7 @@ export default function Login() {
   const [error,setError] = useState({})
   const authUserContext = useContext(AuthContext)
   const msgContext = useContext(MessageContext)
+  const {setLabel} = useContext(LabelContext)
   const history = useHistory()
 
   useEffect(()=>{
@@ -37,51 +39,59 @@ export default function Login() {
         localStorage.setItem('token',data.token)
         authUserContext.setAuthUser(data.user)
         msgContext.setMessage({type:'success', message:`Welcome Back ${data.user.name}`})
-        history.push('/')
+        
+        ax.get('/category',{headers: {Authorization : `Bearer ${data.token}`}}).then((d)=>{
+          const {data} = d.data
+          setLabel(data)
+          history.push('/')
+        })
+
+        
       } 
     })
   }
   return (
     <Master>
-      <div className="container mt-3">
-  <div className="row">
-    <div className="col-md-8 offset-md-2">
-      <div className="card">
-        <div className="card-header bg-dark">
-          <h3 className="text-white">Login</h3>
-        </div>
-        <div className="card-body">
+        <div className="container mt-3">
+    <div className="row">
+      <div className="col-md-8 offset-md-2">
+        <div className="card">
+          <div className="card-header bg-dark">
+            <h3 className="text-white">Login</h3>
+          </div>
+          <div className="card-body">
 
-            <div className="form-group">
-              <label htmlFor className="text-white">Enter Email</label>
-              <input type="email" className={`form-control bg-dark ${error.email && 'border border-danger'} text-white`} onChange={(e)=>setEmail(e.target.value)} placeholder="enter your email" />
-              {
-                error.email && error.email.map((err)=>
-                  <small key={err} className='text-danger'>{err}</small>
-                )
-              }
-            </div>
-            <div className="form-group">
-              <label htmlFor className="text-white">Enter Password</label>
-              <input type="password" className={`form-control bg-dark ${error.password &&  'border border-danger'} text-white`}onChange={(e)=>setPassword(e.target.value)} placeholder="*****" />
-              {
-                error.password && error.password.map(err=>
+              <div className="form-group">
+                <label htmlFor className="text-white">Enter Email</label>
+                <input type="email" className={`form-control bg-dark ${error.email && 'border border-danger'} text-white`} onChange={(e)=>setEmail(e.target.value)} placeholder="enter your email" />
+                {
+                  error.email && error.email.map((err)=>
                     <small key={err} className='text-danger'>{err}</small>
                   )
+                }
+              </div>
+              <div className="form-group">
+                <label htmlFor className="text-white">Enter Password</label>
+                <input type="password" className={`form-control bg-dark ${error.password &&  'border border-danger'} text-white`}onChange={(e)=>setPassword(e.target.value)} placeholder="*****" />
+                {
+                  error.password && error.password.map(err=>
+                      <small key={err} className='text-danger'>{err}</small>
+                    )
+                }
+              </div>
+            <button onClick={()=>Login()} className='btn btn-dark' disabled={loader}>
+              {
+                loader ? <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span> 
+                : 
+                <span>Login</span>
               }
-            </div>
-           <button onClick={()=>Login()} className='btn btn-dark' disabled={loader}>
-             {
-               loader ? <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span> 
-               : 
-               <span>Login</span>
-             }
-             </button>
+              </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+
 
     </Master>
   )
