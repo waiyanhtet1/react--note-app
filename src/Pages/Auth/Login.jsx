@@ -14,7 +14,7 @@ export default function Login() {
   const [error,setError] = useState({})
   const authUserContext = useContext(AuthContext)
   const msgContext = useContext(MessageContext)
-  const {setLabel} = useContext(LabelContext)
+  const {setLabel,setSelected} = useContext(LabelContext)
   const history = useHistory()
 
   useEffect(()=>{
@@ -43,6 +43,7 @@ export default function Login() {
         ax.get('/category',{headers: {Authorization : `Bearer ${data.token}`}}).then((d)=>{
           const {data} = d.data
           setLabel(data)
+          setSelected('')
           history.push('/')
         })
 

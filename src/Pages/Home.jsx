@@ -18,7 +18,6 @@ export default function Home() {
   const msgContext = useContext(MessageContext)
   const {category_slug} = useParams()
   const token = localStorage.getItem('token')
-  // console.log(category_slug)
 
   useEffect(()=>{
     setPageLoader(true)
@@ -33,23 +32,23 @@ export default function Home() {
       url += '?category_slug=' + category_slug
     }
     ax.get(url,{headers: {Authorization: `Bearer ${token}`}}).then((d)=>{
-      const {data} = d.data
+      const {data} = d.data.data
       // console.log(data)
       setNote(data)
-      setNextPage(data.next_page_url)
+      setNextPage(d.data.data.next_page_url)
       setPageLoader(false)
     })
   },[category_slug])
 
+  
   const loadMore = () =>{
-    setLoadMoreState(false)
-    // ax.get(nextPage,{headers: {Authorization: `Bearer ${token}`}}).then((d)=>{
-    //   // const {data} = d.data.data
-    //   // console.log(data)
-    //   setNote([...note, d.data.data.data])
-    //   setNextPage(d.data.data.next_page_url)
-    //   setLoadMoreState(false)
-    // })
+    setLoadMoreState(true)
+    ax.get(nextPage,{headers: {Authorization: `Bearer ${token}`}}).then((d)=>{
+      const {data} = d.data.data
+      setNote([...note,data])
+      setNextPage(d.data.data.next_page_url)
+      setLoadMoreState(false)
+    })
 
   }
 
@@ -109,7 +108,7 @@ export default function Home() {
                   <>
                 <div className="row">
                   {
-                    note.data.map((d)=>(
+                    note.map((d)=>(
                       <div className="col-md-4" key={d.id}>
                         <div className="card"><a href="detail.html">
                             <div className="card-header " style={{backgroundColor: d.color}}>
@@ -143,7 +142,10 @@ export default function Home() {
                 }
                 
               {/* For Load */}
+            
               <div className="row mt-5">
+              {
+                nextPage !== null ?
                 <div className="col-md-12 text-center">
                   {
                     loadMoreState ? <Spinner />
@@ -153,6 +155,9 @@ export default function Home() {
                   </button>
                   }
                 </div>
+                :
+                <div></div>
+              }
               </div>
             </div>
           </div>
