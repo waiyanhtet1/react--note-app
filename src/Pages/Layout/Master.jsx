@@ -2,9 +2,11 @@ import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { useHistory } from 'react-router-dom/'
 import AuthContext from '../../Context/AuthContext'
+import LabelContext from '../../Context/LabelContext'
 
 export default function Master(props) {
   const authUserContext = useContext(AuthContext)
+  const {setSelected} = useContext(LabelContext)
   const history = useHistory()
 
   const Logout = () =>{
@@ -12,22 +14,27 @@ export default function Master(props) {
     authUserContext.setAuthUser({})
     history.push('/login')
   }
+
+  const renderHome= () =>{
+    setSelected('')
+    history.push('/')
+  }
   return (
     <>
     
-        <div>
+        
           <div className="container-fluid" id="header">
         <div />
         <nav className="navbar navbar-expand-lg">
           <div className="container">
-            <Link className="navbar-brand text-white" to="/">MMC-Note</Link>
+            <Link onClick={()=>renderHome()} className="navbar-brand text-white" to="/">MMC-Note</Link>
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span className="navbar-toggler-icon" />
             </button>
             <div className="collapse navbar-collapse" id="navbarSupportedContent">
               <ul className="navbar-nav mr-auto">
                 <li className="nav-item active">
-                  <Link className="nav-link" to="/">Home </Link>
+                  <Link onClick={()=>renderHome()} className="nav-link" to="/">Home </Link>
                 </li>
                 <li className="nav-item">
                   <a className="nav-link" href="#">Your Order</a>
@@ -83,7 +90,7 @@ export default function Master(props) {
 
         {props.children}
 
-      </div>
+      
     
 
     </>

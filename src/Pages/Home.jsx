@@ -6,10 +6,13 @@ import Master from './Layout/Master'
 import { useParams } from 'react-router-dom'
 import ax from '../ax'
 import Spinner from '../Components/Spinner'
+import { Link } from 'react-router-dom'
 
 export default function Home() {
-  const [note,setNote] = useState({})
+  const [note,setNote] = useState([])
+  const [nextPage,setNextPage] = useState('')
   const [Pageloader,setPageLoader] = useState(true)
+  const [loadMoreState,setLoadMoreState] = useState(false)
 
   const history = useHistory()
   const msgContext = useContext(MessageContext)
@@ -31,10 +34,24 @@ export default function Home() {
     }
     ax.get(url,{headers: {Authorization: `Bearer ${token}`}}).then((d)=>{
       const {data} = d.data
+      // console.log(data)
       setNote(data)
+      setNextPage(data.next_page_url)
       setPageLoader(false)
     })
   },[category_slug])
+
+  const loadMore = () =>{
+    setLoadMoreState(false)
+    // ax.get(nextPage,{headers: {Authorization: `Bearer ${token}`}}).then((d)=>{
+    //   // const {data} = d.data.data
+    //   // console.log(data)
+    //   setNote([...note, d.data.data.data])
+    //   setNextPage(d.data.data.next_page_url)
+    //   setLoadMoreState(false)
+    // })
+
+  }
 
   return (
     <Master>
@@ -83,9 +100,13 @@ export default function Home() {
         <div className="col-md-8">
           <div className="card">
             <div className="card-body">
+                  <Link to='/note/create' className='btn btn-danger mb-3'>
+                    New Note
+                  </Link>
                 {
                   Pageloader ? <Spinner />
                   :
+                  <>
                 <div className="row">
                   {
                     note.data.map((d)=>(
@@ -118,14 +139,19 @@ export default function Home() {
                     ))
                   }
                 </div>
+                </>
                 }
                 
               {/* For Load */}
-              <div className="row">
+              <div className="row mt-5">
                 <div className="col-md-12 text-center">
-                  <button className="btn btn-primary btn-fab btn-icon btn-round">
-                    <i className="fas fa-arrow-down" />
+                  {
+                    loadMoreState ? <Spinner />
+                    :
+                  <button className="btn btn-primary btn-fab btn-icon btn-round" onClick={()=>loadMore()}>
+                      <i className="fas fa-arrow-down" />
                   </button>
+                  }
                 </div>
               </div>
             </div>
