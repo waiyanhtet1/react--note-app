@@ -45,7 +45,7 @@ export default function Home() {
     setLoadMoreState(true)
     ax.get(nextPage,{headers: {Authorization: `Bearer ${token}`}}).then((d)=>{
       const {data} = d.data.data
-      setNote([...note,data])
+      setNote([...note,...data])
       setNextPage(d.data.data.next_page_url)
       setLoadMoreState(false)
     })
@@ -114,17 +114,12 @@ export default function Home() {
                             <div className="card-header " style={{backgroundColor: d.color}}>
                               <h5 className="text-white">{d.title}</h5>
                             </div>
-                          </a><div className="card-body"><a href="detail.html">
-                            </a><div className="row"><a href="detail.html">
-                              </a><div className="col-md-4 text-center"><a href="detail.html">
-                                </a><a href className="badge badge-primary">
-                                  <i className="fas fa-eye" />
-                                </a>
-                              </div>
+                          </a><div className="card-body">
+                            <div className="row">
                               <div className="col-md-4 text-center">
-                                <a href className="badge badge-warning">
+                                <Link to={`/note/${d.slug}`} className="badge badge-warning">
                                   <i className="fas fa-edit" />
-                                </a>
+                                </Link>
                               </div>
                               <div className="col-md-4 text-center">
                                 <a href className="badge badge-warning">

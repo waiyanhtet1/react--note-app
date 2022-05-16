@@ -11,7 +11,7 @@ export default function Label() {
     const {pathname} = useLocation()
     
     const renderAll = () =>{
-        setSelected(null)
+        setSelected('')
         push('/')
     }
     return (
@@ -22,7 +22,7 @@ export default function Label() {
                     :
                     <>
                         <li className="list-group-item bg-bg text-white">
-                        Label
+                        Label <button className='btn btn-sm btn-dark float-right'>Show All</button>
                         </li>
                         <ul className="list-group label">
 
