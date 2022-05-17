@@ -17,7 +17,7 @@ function Note_Create() {
     const [loader,setLoader] = useState(false)
     const [error,setError] = useState({})
 
-    const {label} = useContext(LabelContext)
+    const {label,setSelected} = useContext(LabelContext)
     const {setMessage} = useContext(MessageContext)
     const token = localStorage.getItem('token')
     const {push} = useHistory()
@@ -39,6 +39,7 @@ function Note_Create() {
                 setMessage({type:'fail', message:'Fill all Fields!'})
             } else {
                 setMessage({type:'success', message:'New Note Created!'})
+                setSelected('')
                 push('/')
             }
         })

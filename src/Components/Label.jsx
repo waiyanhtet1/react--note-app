@@ -22,7 +22,8 @@ export default function Label() {
                     :
                     <>
                         <li className="list-group-item bg-bg text-white">
-                        Label <button className='btn btn-sm btn-dark float-right'>Show All</button>
+                        Label
+                         <Link to='/label' className='btn btn-sm btn-dark float-right'>Show All</Link>
                         </li>
                         <ul className="list-group label">
 
