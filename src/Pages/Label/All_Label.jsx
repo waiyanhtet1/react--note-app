@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import { Redirect } from 'react-router'
 import { Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom/cjs/react-router-dom.min'
 import ax from '../../ax'
 import Spinner from '../../Components/Spinner'
 import Master from '../Layout/Master'
@@ -32,6 +34,23 @@ const loadMore = () =>{
         setLoadMoreState(false)
       })
 }
+
+const DeleteLabel = (props)=>{
+    const frmData = new FormData()
+    ax.delete('/category/'+props,{headers:{Authorization:`Bearer ${token}`}}).then((d)=>{
+        // window.location.reload()
+        setPageLoader(true)
+        ax.get('/category',{headers: {Authorization: `Bearer ${token}`}}).then((d)=>{
+            const data = d.data.data.data
+            setLabel(data)
+            setPageLoader(false)
+         })
+    })
+
+}  
+
+
+
   return (
     <Master>
         {
@@ -58,8 +77,11 @@ const loadMore = () =>{
                                             label.map((d)=>(
                                         <tr key={d.id}>
                                             <td>{d.name}</td>
-                                            <td><a className='btn btn-warning'>Edit</a>
-                                            <button className='btn btn-danger ml-3'>Delete</button></td>
+                                            <td><Link to={{
+                                                pathname : `/label/edit/${d.slug}` ,
+                                                state: {label: d}
+                                            }} className='btn btn-warning'>Edit</Link>
+                                            <button onClick={()=>DeleteLabel(d.slug)} className='btn btn-danger ml-3'>Delete</button></td>
                                         </tr>
                                             ))
                                         }

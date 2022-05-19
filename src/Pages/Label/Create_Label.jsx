@@ -4,6 +4,7 @@ import ax from '../../ax'
 import Spinner from '../../Components/Spinner'
 import Master from '../Layout/Master'
 import MessageContext from '../../Context/MessageContext'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 
 
 function Create_Label() {
@@ -11,6 +12,7 @@ function Create_Label() {
   const token = localStorage.getItem('token')
   const [label,setLabel] = useState('')
   const[loader,setLoader] = useState(false)
+  const {push} = useHistory()
 
   const frmData = new FormData()
   frmData.append('name',label)
@@ -19,10 +21,13 @@ function Create_Label() {
     setLoader(true)
     ax.post('/category',frmData,{headers:{Authorization: `Bearer ${token}`}}).then((d)=>{
       setLoader(false)
-      if(d.success){
+      if(d.data.success){
         setMessage({type:'success', message:'New Label Created!'})
          setLabel('')
-       }
+          push('/label')
+      } else {
+        setMessage({type:'fail',message:'Fill the field!'})
+      }
     })
   }
 

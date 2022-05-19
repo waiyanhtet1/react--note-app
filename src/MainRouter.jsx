@@ -7,6 +7,7 @@ import Note_Create from './Pages/Note/Note_Create'
 import Note_Edit from './Pages/Note/Note_Edit'
 import All_Label from './Pages/Label/All_Label'
 import Create_Label from './Pages/Label/Create_Label'
+import Edit_Label from './Pages/Label/Edit_Label'
 
 export default function MainRouter() {
   return (
@@ -36,6 +37,9 @@ export default function MainRouter() {
         </Route>
         <Route path='/label/create' exact>
             <Create_Label />
+        </Route>
+        <Route path='/label/edit/:slug' exact>
+            <Edit_Label />
         </Route>
         
 
